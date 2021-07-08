@@ -23,3 +23,5 @@ jobs:
         dest: '/opt/racket'
     - name: Install Dependencies
       run: raco pkg install --auto --skip-installed pollen gregor sugar txexpr
+    - name: Test that Gregor is installed
+      run: racket -e '(require gregor)'
