@@ -1,0 +1,22 @@
+name: Push
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Cache Racket dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/racket
+        key: ${{ runner.os }}-racket
+    - name: Install Racket & dependencies
+      uses: Bogdanp/setup-racket@v1.5
+      with:
+        architecture: 'x64'
+        distribution: 'full'
+        variant: 'CS'
+        version: '8.1'
+        packages: 'pollen, gregor, sugar, txexpr'
+        dest: '/opt/racket'
