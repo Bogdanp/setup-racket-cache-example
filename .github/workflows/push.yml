@@ -9,14 +9,17 @@ jobs:
     - name: Cache Racket dependencies
       uses: actions/cache@v2
       with:
-        path: ~/.cache/racket
-        key: ${{ runner.os }}-racket
-    - name: Install Racket & dependencies
+        path: |
+          ~/.cache/racket
+          ~/.local/share/racket
+        key: ${{ runner.os }}-racket-8.1
+    - name: Install Racket
       uses: Bogdanp/setup-racket@v1.5
       with:
         architecture: 'x64'
         distribution: 'full'
         variant: 'CS'
         version: '8.1'
-        packages: 'pollen, gregor, sugar, txexpr'
         dest: '/opt/racket'
+    - name: Install Dependencies
+      run: raco pkg install --auto --skip-installed pollen gregor sugar txexpr
