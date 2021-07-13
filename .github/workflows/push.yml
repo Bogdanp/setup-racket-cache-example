@@ -20,7 +20,34 @@ jobs:
         distribution: 'full'
         variant: 'CS'
         version: '8.1'
-        dest: '/opt/racket'
+    - name: Install Dependencies
+      run: raco pkg install --auto --skip-installed pollen gregor sugar txexpr
+    - name: Test that Gregor is installed
+      run: racket -e '(require gregor)'
+
+  # This job is the same as the one above, but it demonstrates how you
+  # can cache packages for the "current" version of Racket.
+  test-current:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Install Racket
+      uses: Bogdanp/setup-racket@v1.5
+      with:
+        architecture: 'x64'
+        distribution: 'full'
+        variant: 'CS'
+        version: 'current'
+    - name: Save version
+      run: racket --version > .racket-version
+    - name: Cache Racket dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/racket
+          ~/.local/share/racket
+        key: ${{ runner.os }}-racket-current-${{ hashFiles('.racket-version') }}
     - name: Install Dependencies
       run: raco pkg install --auto --skip-installed pollen gregor sugar txexpr
     - name: Test that Gregor is installed
